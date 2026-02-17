@@ -8,8 +8,14 @@ class Shift extends Model
 {
     protected $fillable = ['name', 'start_time', 'end_time'];
 
+    protected $casts = [
+        'start_time' => 'datetime:H:i',
+        'end_time' => 'datetime:H:i',
+    ];
+
     // Relasi ke jadwal
-    public function schedules() {
+    public function schedules()
+    {
         return $this->hasMany(ShiftSchedule::class);
     }
 }

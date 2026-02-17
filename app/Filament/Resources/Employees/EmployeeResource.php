@@ -7,6 +7,7 @@ use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
 use App\Filament\Resources\Employees\Pages\ViewEmployee;
 use App\Filament\Resources\Employees\RelationManagers\DocumentsRelationManager;
+use App\Filament\Resources\Employees\RelationManagers\HistoriesRelationManager;
 use App\Filament\Resources\Employees\Schemas\EmployeeForm;
 use App\Filament\Resources\Employees\Schemas\EmployeeInfolist;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
@@ -18,12 +19,14 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
+    protected static string|UnitEnum|null $navigationGroup = 'Employee Management';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -47,6 +50,7 @@ class EmployeeResource extends Resource
     {
         return [
             DocumentsRelationManager::class,
+            HistoriesRelationManager::class,
         ];
     }
 

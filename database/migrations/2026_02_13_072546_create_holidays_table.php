@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->string('name'); // Contoh: Idul Fitri, Tahun Baru
+            $table->boolean('is_national')->default(true); // True = API, False = Manual
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

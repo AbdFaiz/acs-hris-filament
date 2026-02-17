@@ -13,6 +13,8 @@ class Holiday extends Model
     protected $fillable = [
         'date',
         'name',
+        'is_national',
+        'description'
     ];
 
     /**
@@ -21,5 +23,6 @@ class Holiday extends Model
      */
     protected $casts = [
         'date' => 'date',
+        'is_nasional' => 'boolean'
     ];
 }

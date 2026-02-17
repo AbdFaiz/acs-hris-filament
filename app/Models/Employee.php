@@ -82,27 +82,86 @@ class Employee extends Model
         return $this->hasMany(EmployeeDocument::class);
     }
 
+    public function histories()
+    {
+        return $this->hasMany(EmployeeHistory::class);
+    }
+
     protected static function booted()
     {
-        static::updated(function ($employee) {
-            // Ambil data yang benar-benar berubah saja
-            $changes = $employee->getChanges();
+        // Mapping untuk kolom ID ke Nama Model-nya
+        $idMappings = [
+            'department_id' => Department::class,
+            'position_id' => Position::class,
+            'manager_id' => Employee::class,
+        ];
 
-            // Abaikan kolom yang tidak penting dicatat historinya
+        // Fungsi Helper internal untuk ambil Nama dari ID
+        $getNameFromId = function ($key, $id) use ($idMappings) {
+            if (! $id || ! isset($idMappings[$key])) {
+                return $id;
+            }
+            $model = $idMappings[$key];
+
+            // Kita asumsikan semua model punya kolom 'name', khusus manager mungkin butuh logic lain
+            return $model::find($id)?->name ?? "ID: $id";
+        };
+
+        static::created(function ($employee) {
+            EmployeeHistory::create([
+                'employee_id' => $employee->id,
+                'type' => 'Registration',
+                'effective_date' => $employee->join_date ?? now(),
+                'old_data' => null,
+                'new_data' => $employee->getAttributes(),
+                'description' => "Karyawan baru berhasil didaftarkan dengan NIK {$employee->nik}.",
+            ]);
+        });
+
+        static::updated(function ($employee) use ($getNameFromId, $idMappings) {
+            $changes = $employee->getChanges();
             unset($changes['updated_at']);
 
             if (! empty($changes)) {
                 $oldData = [];
+                $newData = [];
+                $changedFields = [];
+
                 foreach ($changes as $key => $newValue) {
-                    $oldData[$key] = $employee->getOriginal($key);
+                    $oldValue = $employee->getOriginal($key);
+
+                    // Jika kolomnya adalah ID (seperti position_id), kita simpan Namanya
+                    if (isset($idMappings[$key])) {
+                        $readableKey = str_replace('_id', '', $key);
+                        $oldData[$readableKey] = $getNameFromId($key, $oldValue);
+                        $newData[$readableKey] = $getNameFromId($key, $newValue);
+                        $changedFields[] = ucfirst($readableKey);
+                    } else {
+                        $oldData[$key] = $oldValue;
+                        $newData[$key] = $newValue;
+                        $changedFields[] = ucfirst(str_replace('_', ' ', $key));
+                    }
                 }
 
-                \App\Models\EmployeeHistory::create([
+                // Tentukan Type secara dinamis
+                $type = 'Update Profile';
+                if (array_key_exists('position_id', $changes)) {
+                    $type = 'Promotion/Demotion';
+                }
+                if (array_key_exists('department_id', $changes)) {
+                    $type = 'Transfer';
+                }
+                if (array_key_exists('is_active', $changes)) {
+                    $type = 'Status Change';
+                }
+
+                EmployeeHistory::create([
                     'employee_id' => $employee->id,
-                    'type' => 'update_profile',
+                    'type' => $type,
+                    'effective_date' => now(),
                     'old_data' => $oldData,
-                    'new_data' => $changes,
-                    'description' => 'Perubahan data oleh '.(auth()->user()->name ?? 'System'),
+                    'new_data' => $newData,
+                    'description' => 'Perubahan pada: '.implode(', ', $changedFields).' oleh '.(auth()->user()->name ?? 'System'),
                 ]);
             }
         });

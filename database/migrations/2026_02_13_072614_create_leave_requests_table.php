@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('reason');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->foreignId('approved_by')->nullable()->constrained('users');
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
