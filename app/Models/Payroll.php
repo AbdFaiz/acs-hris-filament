@@ -10,12 +10,13 @@ class Payroll extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
-    
+
     protected $casts = [
-        'basic_salary' => 'decimal',
-        'total_allowance' => 'decimal',
-        'total_deduction' => 'decimal',
-        'net_salary' => 'decimal',
+        'basic_salary' => 'float',
+        'total_allowance' => 'float',
+        'total_deduction' => 'float',
+        'net_salary' => 'float',
+        'payment_date' => 'date'
     ];
 
     // Menghitung otomatis sisa gaji di level model
@@ -31,5 +32,11 @@ class Payroll extends Model
     // Relasi ke rincian item (Tunjangan/Potongan)
     public function items() {
         return $this->hasMany(PayrollItem::class);
+    }
+
+    public function salaryComponents()
+    {
+        return $this->belongsToMany(SalaryComponent::class, 'payroll_items')
+                    ->withPivot(['amount', 'type', 'name']);
     }
 }

@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class PayrollItem extends Model
 {
     use HasFactory;
+
     protected $fillable = ['payroll_id', 'salary_component_id', 'type', 'name', 'amount'];
 
-    public function payroll() {
+    public function payroll()
+    {
         return $this->belongsTo(Payroll::class);
+    }
+
+    public function salaryComponent()
+    {
+        return $this->belongsTo(SalaryComponent::class);
     }
 }

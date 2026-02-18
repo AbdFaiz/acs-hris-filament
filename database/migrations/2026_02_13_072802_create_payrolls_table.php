@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('total_deduction', 15, 2)->default(0);
             $table->decimal('net_salary', 15, 2);
             $table->enum('status', ['draft', 'published', 'paid'])->default('draft');
+            $table->date('payment_date');
+            $table->unique(['employee_id', 'period_month', 'period_year']);
             $table->softDeletes();
             $table->timestamps();
         });

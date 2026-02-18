@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalaryComponent extends Model
 {
-    protected $fillable = ['name', 'type', 'is_fixed'];
+    protected $fillable = ['name', 'code', 'type', 'is_fixed'];
 
     // Relasi ke item payroll (untuk tracking penggunaan komponen ini di slip gaji)
     public function payrollItems()

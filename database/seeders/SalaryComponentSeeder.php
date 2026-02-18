@@ -12,9 +12,9 @@ class SalaryComponentSeeder extends Seeder
      */
     public function run(): void
     {
-        SalaryComponent::create(['name' => 'Gaji Pokok', 'type' => 'allowance', 'is_fixed' => true]);
-        SalaryComponent::create(['name' => 'Tunjangan Transport', 'type' => 'allowance', 'is_fixed' => true]);
-        SalaryComponent::create(['name' => 'BPJS Kesehatan', 'type' => 'deduction', 'is_fixed' => true]);
-        SalaryComponent::create(['name' => 'Bonus Project', 'type' => 'allowance', 'is_fixed' => false]);
+        SalaryComponent::create(['name' => 'Gaji Pokok', 'code' => 'BASIC', 'type' => 'allowance', 'is_fixed' => true]);
+        SalaryComponent::create(['name' => 'Tunjangan Transport', 'code' => 'TRANSPORT', 'type' => 'allowance', 'is_fixed' => true]);
+        SalaryComponent::create(['name' => 'BPJS Kesehatan', 'code' => 'BPJS-KES', 'type' => 'deduction', 'is_fixed' => true]);
+        SalaryComponent::create(['name' => 'Bonus Project', 'code' => 'BONUS-PRJ', 'type' => 'allowance', 'is_fixed' => false]);
     }
 }

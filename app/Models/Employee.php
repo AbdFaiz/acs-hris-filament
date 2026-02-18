@@ -16,6 +16,7 @@ class Employee extends Model
         'birth_date' => 'date',
         'join_date' => 'date',
         'is_active' => 'boolean', // Memastikan data 0/1 jadi true/false di aplikasi
+        'basic_salary' => 'float',
     ];
 
     protected $with = [
@@ -85,6 +86,32 @@ class Employee extends Model
     public function histories()
     {
         return $this->hasMany(EmployeeHistory::class);
+    }
+
+    public function sanctions()
+    {
+        return $this->hasMany(EmployeeSanction::class);
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(EmployeeLoan::class);
+    }
+
+    public function appraisals()
+    {
+        return $this->hasMany(EmployeeAppraisal::class);
+    }
+
+    // Scope untuk memisahkan Karyawan Aktif & Resign (Poin b)
+    public function scopeResigned($query)
+    {
+        return $query->whereNotNull('resign_date');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('resign_date')->where('is_active', true);
     }
 
     protected static function booted()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ShiftSchedules\Schemas;
 
+use App\Models\Employee;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,8 +15,8 @@ class ShiftScheduleForm
         return $schema
             ->components([
                 Select::make('employee_id')
-                    ->relationship('employee', 'name')
-                    ->multiple()
+                    ->options(Employee::pluck('name', 'id'))
+                    ->multiple(fn (string $context): bool => $context === 'create')
                     ->searchable()
                     ->required(),
                 Select::make('shift_id')

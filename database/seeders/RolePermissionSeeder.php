@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -61,7 +61,7 @@ class RolePermissionSeeder extends Seeder
             'manage-attendance', 'manage-schedules',
             'view-leave-requests', 'approve-leave',
             'manage-departments', 'manage-positions', 'manage-holidays',
-            'view-all-documents', 'manage-documents'
+            'view-all-documents', 'manage-documents',
         ]);
 
         $roleEmployee = Role::updateOrCreate(['name' => 'employee', 'guard_name' => 'web']);
@@ -87,5 +87,16 @@ class RolePermissionSeeder extends Seeder
             ]
         );
         $employeeUser->assignRole($roleEmployee);
+
+        $faizUser = User::firstOrCreate(
+            ['email' => 'faiz@acs.com'],   // kondisi pencarian
+            [
+                'name' => 'Faiz',
+                'password' => Hash::make('faiz'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        $faizUser->assignRole($roleEmployee);
     }
 }

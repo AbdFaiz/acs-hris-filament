@@ -52,7 +52,7 @@ class HistoriesRelationManager extends RelationManager
                     ->getStateUsing(function ($record) {
                         $output = [];
                         if (!$record->new_data) return '-';
-                        
+
                         foreach ($record->new_data as $key => $newValue) {
                             $oldValue = $record->old_data[$key] ?? 'N/A';
                             // Format: Nama Kolom: Dari -> Menjadi

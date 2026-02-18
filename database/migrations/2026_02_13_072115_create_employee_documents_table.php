@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('document_type'); // KTP, NPWP, Contract, Degree
             $table->string('file_path');
             $table->date('expired_at')->nullable();
+            $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
+            $table->text('reject_reason')->nullable();
             $table->timestamps();
         });
     }

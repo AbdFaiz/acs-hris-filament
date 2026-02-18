@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('salary_components', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Tunjangan Makan, BPJS, PPh21
+            $table->string('name'); // Tunjangan Makan, BPJS,
+            $table->string('code')->unique(); // Contoh: BASIC, LATE, MEAL, OVERTIME
             $table->enum('type', ['allowance', 'deduction']); // Tunjangan atau Potongan
             $table->boolean('is_fixed')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
